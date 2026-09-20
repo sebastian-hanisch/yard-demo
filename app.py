@@ -371,6 +371,15 @@ Es gibt drei **Auftragsarten** mit unterschiedlichem Gewicht der Verspätung:
 Zielgröße ist die **gewichtete Verspätung**: Verspätung je Auftrag (Ende minus Frist, mindestens 0)
 mal Gewicht, aufsummiert. Bei Gleichstand entscheiden die **Leerfahrten**.
 
+Das Problem ist mit der **Tourenplanung (VRP)** verwandt - genauer ein VRP mit Zeitfenstern und
+Abhol-/Zustell-Aufträgen (jeder Auftrag ist eine feste Fahrt von A nach B, das Fahrzeug fährt
+dazwischen leer weiter) - unterscheidet sich aber in drei Punkten: Ziel ist nicht die kürzeste
+Strecke, sondern die **gewichtete Verspätung** gegen Fristen (die Strecke zählt nur als
+Tie-Breaker), es gibt weder Rückkehr zum Depot noch Kapazitätsgrenzen, und ein Disponent sieht
+nur **bereits freigegebene** Aufträge (Online-Betrieb). Gleichwertig lässt es sich als
+Scheduling-Problem auf parallelen Maschinen lesen, bei dem die Anfahrt die reihenfolgeabhängige
+Rüstzeit ist.
+
 Vier Verfahren stehen zur Auswahl (im Expander "Wie wir das erreichen" alle nebeneinander),
 zusätzlich eine **exakte Referenzlösung** (Google OR-Tools CP-SAT):
 
