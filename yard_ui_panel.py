@@ -13,7 +13,7 @@ def render_yard_panel(prefix, label, instance, result):
     m3.metric("Leerfahrten", f"{result['empty_minutes']} min")
 
     fig = build_gantt_chart(instance, result, title=label)
-    st.plotly_chart(fig, use_container_width=True, key=f"{prefix}_gantt_chart")
+    st.plotly_chart(fig, width="stretch", key=f"{prefix}_gantt_chart")
 
     pdf_bytes = generate_yard_plan_pdf(label, instance, result)
     st.download_button(

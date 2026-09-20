@@ -109,7 +109,7 @@ PRESET_HELP = {
 preset_cols = st.columns(len(C.PRESETS))
 for i, name in enumerate(C.PRESETS.keys()):
     with preset_cols[i]:
-        st.button(name, use_container_width=True, on_click=apply_preset, args=(name,), help=PRESET_HELP[name])
+        st.button(name, width="stretch", on_click=apply_preset, args=(name,), help=PRESET_HELP[name])
 
 st.caption(
     "🔗 Die Adresszeile oben spiegelt Ihre aktuelle Konfiguration wider – einfach kopieren, "
@@ -157,7 +157,7 @@ with st.sidebar:
     )
 
     st.button(
-        "🎲 Neue Aufträge generieren", use_container_width=True, on_click=randomize_seed,
+        "🎲 Neue Aufträge generieren", width="stretch", on_click=randomize_seed,
         help="Würfelt einen neuen Zufalls-Seed für die Auftragslage.",
     )
 
@@ -197,14 +197,14 @@ if score_saved > 0:
         f"({pct_saved:.0f} %) gegenüber '{baseline['label']}'."
     )
 
-st.plotly_chart(build_gantt_chart(instance, best, title=best["label"]), use_container_width=True, key="primary_gantt_chart")
+st.plotly_chart(build_gantt_chart(instance, best, title=best["label"]), width="stretch", key="primary_gantt_chart")
 st.caption(
     "Balken = Auftrag (Nummer im Balken), graue Balken = Leerfahrt zur Brücke, schwarzer Strich = Frist, "
     "oranger Rand = verspätet."
 )
 
 st.markdown("#### 🗺️ Hofplan")
-st.plotly_chart(build_yard_map(instance, best, title=""), use_container_width=True, key="primary_yard_map")
+st.plotly_chart(build_yard_map(instance, best, title=""), width="stretch", key="primary_yard_map")
 st.caption(
     "Wege der Wechselbrücken (Kreis = Abholort, Pfeil = Abstellort), Farbe = Auftragsart. Gerechnet wird mit "
     "rechtwinkligen Hofwegen bei ca. 9 km/h."
@@ -349,9 +349,9 @@ with st.expander("🔧 Wie wir das erreichen – vollständiger Methodenvergleic
 
     with tab_compare:
         all_results = list(results) + ([exact_eval] if exact_eval is not None else [])
-        st.dataframe(comparison_table(all_results), use_container_width=True, hide_index=True)
-        st.plotly_chart(build_comparison_chart(all_results), use_container_width=True, key="comparison_chart")
-        st.plotly_chart(build_kind_tardiness_chart(all_results), use_container_width=True, key="kind_tardiness_chart")
+        st.dataframe(comparison_table(all_results), width="stretch", hide_index=True)
+        st.plotly_chart(build_comparison_chart(all_results), width="stretch", key="comparison_chart")
+        st.plotly_chart(build_kind_tardiness_chart(all_results), width="stretch", key="kind_tardiness_chart")
 
 with st.expander("Wie funktioniert diese Demo?"):
     st.markdown(
