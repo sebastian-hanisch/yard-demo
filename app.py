@@ -61,7 +61,7 @@ def _compute_heuristics(scenario_key):
         instance, sequences_to_plan(instance, best_online_sequences), label=LABEL_PREPOSITIONED
     )
 
-    offline_plan, offline_sequences = improve_plan(instance)
+    offline_plan, offline_sequences = improve_plan(instance, start_sequences=[s for _, s in online])
     offline = evaluate(instance, offline_plan, label=LABEL_OFFLINE)
 
     results = [r for r, _ in online] + [offline]
@@ -210,10 +210,15 @@ st.caption(
     "rechtwinkligen Hofwegen bei ca. 9 km/h."
 )
 
-st.download_button(
-    "📄 Einsatzplan als PDF herunterladen", data=generate_yard_plan_pdf(best["label"], instance, best),
-    file_name="einsatzplan_optimiert.pdf", mime="application/pdf", key="primary_pdf_download",
-)
+if st.button("📄 Einsatzplan als PDF erzeugen", key="primary_pdf_generate"):
+    st.session_state["primary_pdf_bytes"] = generate_yard_plan_pdf(best["label"], instance, best)
+
+primary_pdf_bytes = st.session_state.get("primary_pdf_bytes")
+if primary_pdf_bytes is not None:
+    st.download_button(
+        "📄 Einsatzplan als PDF herunterladen", data=primary_pdf_bytes,
+        file_name="einsatzplan_optimiert.pdf", mime="application/pdf", key="primary_pdf_download",
+    )
 
 st.caption(
     "Ermittelt mit der besten von vier eigenen Verfahren für dieses Szenario. Die Vorausplanung setzt voraus, "

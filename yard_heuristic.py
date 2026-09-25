@@ -215,13 +215,17 @@ def iterated_local_search(instance, sequences, iterations=C.ILS_ITERATIONS, seed
     return best
 
 
-def improve_plan(instance, iterations=C.ILS_ITERATIONS):
+def improve_plan(instance, iterations=C.ILS_ITERATIONS, start_sequences=None):
     """Vorausplanung: startet von den Reihenfolgen aller drei Online-Regeln (die Zeiten werden
     frühestmöglich neu berechnet - das ist bereits die Vorpositionierung), verbessert jede per
-    lokaler Suche und schärft die beste Endlösung mit Iterated Local Search nach."""
-    starts = [dispatch_atc(instance)[1], dispatch_edd(instance)[1], dispatch_fifo(instance)[1]]
+    lokaler Suche und schärft die beste Endlösung mit Iterated Local Search nach.
+
+    `start_sequences` erlaubt es Aufrufern, die Online-Reihenfolgen wiederzuverwenden, falls sie
+    ohnehin schon berechnet wurden (siehe app.py), statt sie hier erneut zu bestimmen."""
+    if start_sequences is None:
+        start_sequences = [dispatch_atc(instance)[1], dispatch_edd(instance)[1], dispatch_fifo(instance)[1]]
     best_seqs, best_cost = None, None
-    for seqs in starts:
+    for seqs in start_sequences:
         polished = local_search(instance, seqs)
         cost = sum(sequence_cost(instance, s) for s in polished)
         if best_cost is None or cost < best_cost:

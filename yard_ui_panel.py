@@ -15,13 +15,20 @@ def render_yard_panel(prefix, label, instance, result):
     fig = build_gantt_chart(instance, result, title=label)
     st.plotly_chart(fig, width="stretch", key=f"{prefix}_gantt_chart")
 
-    pdf_bytes = generate_yard_plan_pdf(label, instance, result)
-    st.download_button(
-        "📄 Einsatzplan als PDF herunterladen",
-        data=pdf_bytes,
-        file_name=f"einsatzplan_{prefix}.pdf",
-        mime="application/pdf",
-        key=f"{prefix}_pdf_download",
-    )
+    # st.tabs() fuehrt den Code aller Tab-Bodies bei jedem Rerun aus, nicht nur des sichtbaren
+    # Tabs - das PDF deshalb nur auf Klick erzeugen statt bei jedem Slider-/Preset-Rerun fuer
+    # alle Methoden gleichzeitig.
+    if st.button("📄 Einsatzplan als PDF erzeugen", key=f"{prefix}_pdf_generate"):
+        st.session_state[f"{prefix}_pdf_bytes"] = generate_yard_plan_pdf(label, instance, result)
+
+    pdf_bytes = st.session_state.get(f"{prefix}_pdf_bytes")
+    if pdf_bytes is not None:
+        st.download_button(
+            "📄 Einsatzplan als PDF herunterladen",
+            data=pdf_bytes,
+            file_name=f"einsatzplan_{prefix}.pdf",
+            mime="application/pdf",
+            key=f"{prefix}_pdf_download",
+        )
 
     return result
