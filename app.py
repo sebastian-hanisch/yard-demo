@@ -422,6 +422,9 @@ Depot stehen.
 
 Entscheidungsvariablen: $x_{ij} \in \{0,1\}$ (ein Fahrzeug bedient $j$ direkt nach $i$; Knoten $0$ =
 Depot), Startzeit $S_j \ge r_j$ (Fahrzeug steht am Abholort und kuppelt an) und Verspätung $T_j$.
+Der Bogen $x_{i0}$ (Fahrzeug endet nach Auftrag $i$) steckt in den Gradbedingungen unten mit
+$j = 0$, verursacht aber weder Zeit noch Kosten ($\tau_{i0} := 0$) - ein Rückweg zum Depot wird
+nicht modelliert.
 
 $$
 \sum_{i \ne j} x_{ij} = 1 \;\; \forall j, \qquad \sum_{j \ne i} x_{ij} = 1 \;\; \forall i \ge 1, \qquad \sum_{j} x_{0j} \le m
@@ -449,9 +452,14 @@ I_{j} \;=\; \frac{w_j}{p_j + \tau}\,\exp\!\Big(-\frac{\max\{0,\; d_j - (t + \tau
 $$
 
 mit mittlerer Servicezeit $\bar p$ und Lookahead-Parameter $K$ (hier $K = KVALUE$). Es wird das Paar mit
-dem größten Index gestartet. Ist der Restpuffer groß, zählt praktisch nur $w_j/(p_j+\tau)$ (kurze,
-wichtige Aufträge zuerst); wird er knapp oder negativ, ist der Exponentialterm 1 - Dringlichkeit
-und Gewicht sind laufend gegeneinander abgewogen.
+dem größten Index gestartet. Ist der Restpuffer groß, wird der Exponentialterm klein und der Index
+nahe 0: der Auftrag kann warten (unter solchen Aufträgen setzt sich tendenziell der mit dem
+kleineren Puffer durch). Ist der Puffer knapp oder negativ, ist der Exponentialterm 1 und der
+Index gleich $w_j/(p_j+\tau)$: unter dringenden Aufträgen zählt Gewicht pro Aufwand (kurze,
+wichtige zuerst). So sind Dringlichkeit und Gewicht laufend gegeneinander abgewogen. $K$ legt
+fest, wie weit voraus Dringlichkeit zählt: ein großes $K$ behandelt mehr Aufträge als dringend
+(für $K \to \infty$ bleibt nur $w_j/(p_j+\tau)$), ein kleines $K$ nur Aufträge mit fast
+aufgebrauchtem Puffer.
 
 Gelöst in `yard_cp_solver.py` mit Google OR-Tools CP-SAT (`AddMultipleCircuit`
 über die Bögen $x_{ij}$, ein Fahrzeugindex ist wegen identischer Fahrzeuge nicht nötig), auf

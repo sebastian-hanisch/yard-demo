@@ -14,9 +14,13 @@ freigegeben ist.
     Lee/Bhaskaram/Pinedo 1997): dynamischer Prioritätsindex je (Fahrzeug, Auftrag)-Paar
         I = (w / (p + tau)) * exp(-max(0, Restpuffer) / (K * p_mittel))
     mit Gewicht w, Servicezeit p, Anfahrtszeit tau. Ist der Restpuffer (Frist minus voraus-
-    sichtliches Ende bei sofortigem Start) groß, zählt fast nur Gewicht pro Aufwand (WSPT); wird
-    er knapp oder negativ, springt der Index hoch bzw. bleibt bei w/(p+tau). Dringlichkeit und
-    Gewicht werden also LAUFEND gegeneinander abgewogen - "dynamische Priorisierung".
+    sichtliches Ende bei sofortigem Start) groß, wird der Exponentialterm klein und der Index
+    nahe 0: der Auftrag kann warten. Ist der Puffer knapp oder negativ, ist der Term 1 und der
+    Index gleich w/(p+tau) (Gewicht pro Aufwand, WSPT) - unter dringenden Aufträgen gewinnen also
+    kurze, wichtige. Dringlichkeit und Gewicht werden LAUFEND gegeneinander abgewogen -
+    "dynamische Priorisierung". K bestimmt den Vorblick: großes K behandelt mehr Aufträge als
+    dringend (K -> unendlich: nur noch w/(p+tau)), kleines K nur Aufträge mit fast aufgebrauchtem
+    Puffer.
 
 VORAUSPLANUNG (`improve_plan`) kennt alle Aufträge des Fensters im Voraus (z. B. durch
 Avisierung/Tor-Slots) und darf deshalb Fahrzeuge vorpositionieren: es startet bei den
@@ -26,8 +30,9 @@ Suche akzeptiert nur echte Verbesserungen, kann ihr Startergebnis also nie versc
 schärft Iterated Local Search (zufälliges Umhängen von drei Aufträgen + erneutes Polieren, nur
 nicht-schlechtere Ergebnisse werden übernommen) die beste Lösung nach. Im Gegensatz zu manchen
 anderen Demos dieses Portfolios (dock-demo: ILS/Tabu/3-opt verworfen) zahlt sich das hier messbar
-aus: gegen den exakten Löser bei 12 Aufträgen 2/10 -> 10/10 Optimum-Treffer, bei 30 Aufträgen im
-Mittel 15,8 -> 12,7 (exakt bzw. beste gefundene: 12,2) gewichtete Verspätung, siehe README.
+aus: gegen den exakten Löser bei 16 Aufträgen 1/10 -> 9/10 Optimum-Treffer, bei 30 Aufträgen im
+Mittel 30,3 -> 27,8 (exakt bzw. beste gefundene: 27,7) gewichtete Verspätung, siehe README
+(dort auch die Szenarioparameter der Messung).
 
 Alle Pläne haben die Form `job_index -> (vehicle, start)` (siehe yard_evaluation.py)."""
 
