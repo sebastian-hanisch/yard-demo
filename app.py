@@ -444,9 +444,10 @@ I_{j} \;=\; \frac{w_j}{p_j + \tau}\,\exp\!\Big(-\frac{\max\{0,\; d_j - (t + \tau
 $$
 
 mit mittlerer Servicezeit $\bar p$ und Lookahead-Parameter $K$ (hier $K = KVALUE$). Es wird das Paar mit
-dem größten Index gestartet. Ist der Restpuffer groß, zählt praktisch nur $w_j/(p_j+\tau)$ (kurze,
-wichtige Aufträge zuerst); wird er knapp oder negativ, ist der Exponentialterm 1 - Dringlichkeit
-und Gewicht sind laufend gegeneinander abgewogen.
+dem größten Index gestartet. Wird der Restpuffer knapp oder negativ, ist der Exponentialterm 1 und es
+zählt nur $w_j/(p_j+\tau)$ (kurze, wichtige Aufträge zuerst); ist der Puffer groß, drückt der Exponentialterm
+den Index gegen null - der Auftrag kann warten. Dringlichkeit und Gewicht sind so laufend gegeneinander
+abgewogen.
 
 Gelöst in `yard_cp_solver.py` mit Google OR-Tools CP-SAT (`AddMultipleCircuit`
 über die Bögen $x_{ij}$, ein Fahrzeugindex ist wegen identischer Fahrzeuge nicht nötig), auf
@@ -460,6 +461,6 @@ st.markdown("---")
 
 st.caption(
     "Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – "
-    "Operations Research und Machine Learning. Interesse an einer maßgeschneiderten Lösung für "
-    "Ihr Unternehmen? [Kontakt aufnehmen](https://sebastianhanisch.net/kontakt.html)"
+    "Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). "
+    "Mehr zum Thema: [Hof- und Yard-Management optimieren](https://sebastianhanisch.net/yard-management-optimierung.html)."
 )

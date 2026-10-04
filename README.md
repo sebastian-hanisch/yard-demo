@@ -68,7 +68,7 @@ Verlauf FIFO > EDD > ATC > Vorausplanung; die App wählt die beste Online-Regel 
 Der K-Parameter ist flach: K = 0,3 … 3 liegt im Mittel innerhalb von ca. 10 %, gewählt K = 1.
 
 **Bei geringer Last (Belastungsgrad ≈ 20 %) gibt es keine Verspätung** – alle Verfahren
-gleich; Vorausplanung spart dann nur Leerfahrten (Preset "Ruhiger Vormittag": 33 → 18 min).
+gleich; Vorausplanung spart dann nur Leerfahrten (Preset "Ruhiger Vormittag": 23 → 18 min).
 
 **Lokale Suche allein reichte nicht – ILS schließt die Lücke zum exakten Optimum weitgehend.**
 Anders als bei manchen früheren Demos (dock-demo: ILS/Tabu/3-opt verworfen) lohnt sich hier die
@@ -130,3 +130,7 @@ pip install -r requirements-dev.txt
 streamlit run app.py
 python -m pytest tests/ -v
 ```
+
+---
+
+Diese Demo ist Teil des Portfolios von [Sebastian Hanisch](https://sebastianhanisch.net) – Operations Research und Machine Learning ([Über mich](https://sebastianhanisch.net/ueber-mich.html)). Mehr zum Thema: [Hof- und Yard-Management optimieren](https://sebastianhanisch.net/yard-management-optimierung.html).
