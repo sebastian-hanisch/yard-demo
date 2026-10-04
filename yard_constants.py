@@ -54,7 +54,8 @@ KIND_DESCRIPTIONS = {
 OBJ_BIG = 100_000
 
 # Parameter der ATC-Regel (Apparent Tardiness Cost): wie weit voraus "Dringlichkeit" zählt.
-# Kleines K = schon bei viel Restpuffer wird ein Auftrag als dringend behandelt.
+# Großes K = Vorblick: auch Aufträge mit viel Restpuffer zählen als dringend (K -> unendlich:
+# nur noch Gewicht pro Aufwand); kleines K = nur Aufträge mit fast aufgebrauchtem Puffer.
 ATC_K = 1.0
 
 ILS_ITERATIONS = 40

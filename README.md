@@ -68,26 +68,40 @@ Verlauf FIFO > EDD > ATC > Vorausplanung; die App wählt die beste Online-Regel 
 Der K-Parameter ist flach: K = 0,3 … 3 liegt im Mittel innerhalb von ca. 10 %, gewählt K = 1.
 
 **Bei geringer Last (Belastungsgrad ≈ 20 %) gibt es keine Verspätung** – alle Verfahren
-gleich; Vorausplanung spart dann nur Leerfahrten (Preset "Ruhiger Vormittag": 23 → 18 min).
+gleich; Vorausplanung spart dann nur Leerfahrten (Preset "Ruhiger Vormittag": 23 → 18 min
+gegenüber der besten Online-Regel; FIFO und EDD haben 23 min, ATC allein 33 min).
 
 **Lokale Suche allein reichte nicht – ILS schließt die Lücke zum exakten Optimum weitgehend.**
 Anders als bei manchen früheren Demos (dock-demo: ILS/Tabu/3-opt verworfen) lohnt sich hier die
-Erweiterung: Treffer des exakten Optimums (gewichtete Verspätung + Leerfahrt):
+Erweiterung: Treffer des exakten Optimums (gewichtete Verspätung + Leerfahrt). Messbedingungen
+(am 2026-10-03 neu gemessen, vollständig reproduzierbar): 3 Fahrzeuge, Zeitfenster der Freigaben =
+max(60, 4·n) min, Fristpuffer 10 min, sonst Regler-Defaults (Stoßzeit-Anteil 70 %, Abfahrts-Anteil
+45 %, Hof 450 m, 10 Tore), Seeds 0–9 (bei 30 Aufträgen Seeds 0–5), Belastungsgrad ca. 46–67 %. "Nur
+Umhängen + Tauschen" ist die lokale Suche aus allen drei Online-Reihenfolgen ohne ILS. Treffer zählen
+nur gegen **bewiesene** Optima; CP-SAT lief 10 s mit der ILS-Lösung als Startpunkt, "Exakt" ist bei
+nicht bewiesenen Instanzen die beste gefundene Lösung. (Eine frühere Fassung dieser Tabelle nannte
+keine Szenarioparameter und ließ sich nicht reproduzieren.)
 
-| Aufträge / Fahrzeuge | nur Umhängen + Tauschen | + ILS (40 Iter.) | Laufzeit ILS |
-|---|---:|---:|---:|
-| 10 / 3 | 8 von 10 | 10 von 10 | 0,02 s |
-| 12 / 3 | 2 von 10 (Lücke 4,7 %) | 10 von 10 | 0,03 s |
-| 16 / 3 | 2 von 8 (Lücke 6,0 %) | 6 von 8 (Lücke 1,0 %) | 0,06 s |
-| 30 / 3 (Exakt: 3 von 6 bewiesen) | 2 von 6 (Ø Verspätung 15,8) | 5 von 6 (12,7; Exakt/beste 12,2) | 0,45 s |
+| Aufträge / Fahrzeuge | nur Umhängen + Tauschen | + ILS (40 Iter.) | Ø Verspätung lokal / ILS / Exakt | Laufzeit ILS |
+|---|---:|---:|---:|---:|
+| 10 / 3 | 6 von 10 | 10 von 10 | 1,4 / 1,4 / 1,4 | 0,03 s |
+| 12 / 3 | 6 von 10 | 9 von 10 | 2,8 / 2,8 / 2,8 | 0,06 s |
+| 16 / 3 | 1 von 10 | 9 von 10 | 6,0 / 5,2 / 5,2 | 0,10 s |
+| 30 / 3 (Exakt: nur 2 von 6 bewiesen) | 0 von 2 | 1 von 2 | 30,3 / 27,8 / 27,7 | 0,69 s |
+
+Bei 10–12 Aufträgen unterscheiden sich die Verfahren fast nur in der Leerfahrtzeit (Ø Verspätung
+identisch); ab 16 Aufträgen senkt ILS auch die Verspätung deutlich gegenüber der lokalen Suche.
 
 Bei sehr hoher Last bleibt eine Restlücke: Preset "Zu wenig Hoffahrzeuge" 36 (40 Iter.) vs. 31 bei
 250 Iterationen und im 10-s-CP-SAT-Lauf (nicht bewiesen optimal) – 250 Iterationen würden im
 Worst-Case über 6 s pro Reglerzug kosten. Die App zeigt diese Lücke im Exakt-Tab offen an.
 
 **CP-SAT-Modell gegen Brute-Force geprüft** (alle Permutationen × Fahrzeug-Zuschnitte,
-5 Aufträge, 2 und 3 Fahrzeuge): identische Optima. Bis 12 Aufträge < 0,1 s, 22 Aufträge 8/8
-bewiesen (0,4 s), 30 Aufträge nur 3/6 innerhalb 10 s – dann als "Zeitlimit erreicht" gekennzeichnet.
+5 Aufträge, 2 und 3 Fahrzeuge): identische Optima. Laufzeit unter den Messbedingungen der Tabelle
+oben: bis 12 Aufträge 10 von 10 bewiesen (Ø 0,02–0,04 s, max. 0,12 s), 22 Aufträge 5 von 8 bewiesen
+(Ø 4,9 s), 30 Aufträge nur 2 von 6 innerhalb 10 s – dann als "Zeitlimit erreicht" gekennzeichnet.
+Die Beweisbarkeit hängt stark vom Szenario ab: bei großzügigeren Fristen und längerem Zeitfenster
+(Regler-Defaults, Puffer 15 min) werden auch 30 Aufträge häufiger bewiesen (4 von 6 mit Seeds 0–5).
 
 ## Design-Entscheidungen
 

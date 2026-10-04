@@ -61,7 +61,7 @@ def _compute_heuristics(scenario_key):
         instance, sequences_to_plan(instance, best_online_sequences), label=LABEL_PREPOSITIONED
     )
 
-    offline_plan, offline_sequences = improve_plan(instance)
+    offline_plan, offline_sequences = improve_plan(instance, start_sequences=[s for _, s in online])
     offline = evaluate(instance, offline_plan, label=LABEL_OFFLINE)
 
     results = [r for r, _ in online] + [offline]
@@ -210,10 +210,15 @@ st.caption(
     "rechtwinkligen Hofwegen bei ca. 9 km/h."
 )
 
-st.download_button(
-    "📄 Einsatzplan als PDF herunterladen", data=generate_yard_plan_pdf(best["label"], instance, best),
-    file_name="einsatzplan_optimiert.pdf", mime="application/pdf", key="primary_pdf_download",
-)
+if st.button("📄 Einsatzplan als PDF erzeugen", key="primary_pdf_generate"):
+    st.session_state["primary_pdf_bytes"] = generate_yard_plan_pdf(best["label"], instance, best)
+
+primary_pdf_bytes = st.session_state.get("primary_pdf_bytes")
+if primary_pdf_bytes is not None:
+    st.download_button(
+        "📄 Einsatzplan als PDF herunterladen", data=primary_pdf_bytes,
+        file_name="einsatzplan_optimiert.pdf", mime="application/pdf", key="primary_pdf_download",
+    )
 
 st.caption(
     "Ermittelt mit der besten von vier eigenen Verfahren für dieses Szenario. Die Vorausplanung setzt voraus, "
@@ -417,6 +422,9 @@ Depot stehen.
 
 Entscheidungsvariablen: $x_{ij} \in \{0,1\}$ (ein Fahrzeug bedient $j$ direkt nach $i$; Knoten $0$ =
 Depot), Startzeit $S_j \ge r_j$ (Fahrzeug steht am Abholort und kuppelt an) und Verspätung $T_j$.
+Der Bogen $x_{i0}$ (Fahrzeug endet nach Auftrag $i$) steckt in den Gradbedingungen unten mit
+$j = 0$, verursacht aber weder Zeit noch Kosten ($\tau_{i0} := 0$) - ein Rückweg zum Depot wird
+nicht modelliert.
 
 $$
 \sum_{i \ne j} x_{ij} = 1 \;\; \forall j, \qquad \sum_{j \ne i} x_{ij} = 1 \;\; \forall i \ge 1, \qquad \sum_{j} x_{0j} \le m
@@ -444,10 +452,14 @@ I_{j} \;=\; \frac{w_j}{p_j + \tau}\,\exp\!\Big(-\frac{\max\{0,\; d_j - (t + \tau
 $$
 
 mit mittlerer Servicezeit $\bar p$ und Lookahead-Parameter $K$ (hier $K = KVALUE$). Es wird das Paar mit
-dem größten Index gestartet. Wird der Restpuffer knapp oder negativ, ist der Exponentialterm 1 und es
-zählt nur $w_j/(p_j+\tau)$ (kurze, wichtige Aufträge zuerst); ist der Puffer groß, drückt der Exponentialterm
-den Index gegen null - der Auftrag kann warten. Dringlichkeit und Gewicht sind so laufend gegeneinander
-abgewogen.
+dem größten Index gestartet. Ist der Restpuffer groß, wird der Exponentialterm klein und der Index
+nahe 0: der Auftrag kann warten (unter solchen Aufträgen setzt sich tendenziell der mit dem
+kleineren Puffer durch). Ist der Puffer knapp oder negativ, ist der Exponentialterm 1 und der
+Index gleich $w_j/(p_j+\tau)$: unter dringenden Aufträgen zählt Gewicht pro Aufwand (kurze,
+wichtige zuerst). So sind Dringlichkeit und Gewicht laufend gegeneinander abgewogen. $K$ legt
+fest, wie weit voraus Dringlichkeit zählt: ein großes $K$ behandelt mehr Aufträge als dringend
+(für $K \to \infty$ bleibt nur $w_j/(p_j+\tau)$), ein kleines $K$ nur Aufträge mit fast
+aufgebrauchtem Puffer.
 
 Gelöst in `yard_cp_solver.py` mit Google OR-Tools CP-SAT (`AddMultipleCircuit`
 über die Bögen $x_{ij}$, ein Fahrzeugindex ist wegen identischer Fahrzeuge nicht nötig), auf
