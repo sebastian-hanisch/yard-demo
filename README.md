@@ -135,7 +135,7 @@ Die Beweisbarkeit hängt stark vom Szenario ab: bei großzügigeren Fristen und 
 | `yard_pdf_export.py` | PDF-Einsatzplan |
 | `yard_presets.py` | Presets, Permalink (`SETTING_SPECS`), Seed-Button |
 | `yard_ui_panel.py` | wiederverwendbares Methoden-Panel |
-| `tests/` | 67 Tests (Szenario, Auswertung, Heuristiken, CP-SAT vs. Brute-Force, AppTest-Smoke) |
+| `tests/` | 70 Tests (Szenario, Auswertung, Heuristiken, CP-SAT vs. Brute-Force, unabhängige Orakel, AppTest-Smoke) |
 
 ## Lokal starten
 
