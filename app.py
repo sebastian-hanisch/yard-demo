@@ -95,6 +95,17 @@ weiter unten, die formale Herleitung im Expander "📐 Mathematische Formulierun
 """
 )
 
+# erklaerseite:einfach:start (erzeugt von tools/set_demo_explainer.py (Website-Repo) aus tools/content/explainers/hof-disposition-erklaert.json, nicht von Hand ändern)
+with st.expander("💬 In einfachen Worten"):
+    st.markdown(
+        """
+Auf einem Betriebshof setzen **Hoffahrzeuge** abnehmbare Ladekästen (Wechselbrücken) von einem Platz zum anderen. Jeder **Fahrauftrag** wird zu einer bestimmten Zeit freigegeben und hat eine Frist. Eine verpasste Abfahrt wiegt schwerer als ein spät geräumter leerer Kasten. Gesucht ist die Reihenfolge, die die **gewichtete Verspätung** klein hält. Die Demo vergleicht drei einfache Regeln, die erst entscheiden, wenn ein Fahrzeug frei wird, und nur die schon eingegangenen Aufträge kennen, mit einer **Vorausplanung**, die alle Aufträge vorab kennt. So zeigt sie, was dieses Vorwissen wert ist. Auf Klick zeigt ein exakter Löser, wie nah der Plan am Optimum liegt. Es ist ein stark vereinfachtes, erfundenes Modell ohne Kundendaten.
+
+[Ausführlich und verständlich erklärt, mit Fachteil](https://sebastianhanisch.net/hof-disposition-erklaert.html)
+        """
+    )
+# erklaerseite:einfach:end
+
 st.caption("🎯 Schnellstart – ein Beispielszenario laden:")
 PRESET_HELP = {
     "Ruhiger Vormittag": "Wenige Aufträge, viel Puffer - kein Auftrag kommt zu spät, die Regeln unterscheiden sich "
@@ -408,6 +419,27 @@ Methode. Der **Einsatzplan** zeigt je Fahrzeug die Aufträge in zeitlicher Reihe
     )
 
 with st.expander("📐 Mathematische Formulierung"):
+    # erklaerseite:lesehilfe:start (erzeugt von tools/set_demo_explainer.py (Website-Repo) aus tools/content/explainers/hof-disposition-erklaert.json, nicht von Hand ändern)
+    st.markdown(
+        r"""
+**Lesehilfe.** Gegeben sind $n$ Aufträge mit Freigabe, Dauer, Frist und Gewicht, $m$ gleiche Hoffahrzeuge am Depot und die Anfahrtszeiten zwischen den Orten. Gesucht sind Zuordnung und Reihenfolge der Aufträge, die die gewichtete Verspätung klein halten, bei Gleichstand die Leerfahrtzeit.
+
+| Symbol | Bedeutung |
+|---|---|
+| $j$, $i$ | Aufträge (Knoten $0$ ist das Depot) |
+| $r_j$, $p_j$ | Freigabe und Servicezeit (An- und Abkuppeln plus beladene Fahrt) des Auftrags $j$ |
+| $d_j$, $w_j$ | Frist (Ende des Auftrags) und Gewicht der Verspätung |
+| $\tau_{ij}$ | Anfahrtszeit (leer) vom Abstellort von $i$ zum Abholort von $j$ |
+| $x_{ij}$ | gleich $1$, wenn ein Fahrzeug $j$ direkt nach $i$ bedient, sonst $0$ |
+| $S_j$, $T_j$ | Startzeit und Verspätung des Auftrags $j$ |
+| $W$ | so große Zahl, dass Leerfahrt nie eine Verspätung aufwiegt |
+| $I_j$ | ATC-Index des Auftrags $j$ |
+| $K$, $\bar p$ | Vorblick-Parameter und mittlere Servicezeit |
+
+[Schritt für Schritt erklärt, mit Herleitung und Literatur](https://sebastianhanisch.net/hof-disposition-erklaert.html#fachleute)
+        """
+    )
+    # erklaerseite:lesehilfe:end
     st.markdown(
         r"""
 **Fahrauftrags-Disposition auf dem Hof** als Scheduling-Problem auf parallelen Maschinen mit
