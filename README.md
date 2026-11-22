@@ -41,7 +41,7 @@ freigegebene Aufträge:
 **Vorausplanung** kennt alle Aufträge des Fensters im Voraus (Avisierung, Tor-Slots) und darf
 Fahrzeuge **vorpositionieren**: sie startet bei den Reihenfolgen der drei Online-Regeln,
 wertet sie mit frühestmöglichen Zeiten aus und verbessert per Umhängen/Tauschen (lokale Suche)
-plus Iterated Local Search (40 Iterationen, fester Seed – deterministisch).
+plus Iterated Local Search (40 Iterationen, fester Zufalls-Seed – deterministisch).
 
 **Exakt** (OR-Tools CP-SAT, `AddMultipleCircuit`, 10 s Limit) als Cross-Check auf Klick.
 
@@ -96,7 +96,7 @@ Bei sehr hoher Last bleibt eine Restlücke: Preset "Zu wenig Hoffahrzeuge" 36 (4
 250 Iterationen und im 10-s-CP-SAT-Lauf (nicht bewiesen optimal) – 250 Iterationen würden im
 Worst-Case über 6 s pro Reglerzug kosten. Die App zeigt diese Lücke im Exakt-Tab offen an.
 
-**CP-SAT-Modell gegen Brute-Force geprüft** (alle Permutationen × Fahrzeug-Zuschnitte,
+**CP-SAT-Modell gegen Brute-Force geprüft** (alle Permutationen × Fahrzeugzuordnungen,
 5 Aufträge, 2 und 3 Fahrzeuge): identische Optima. Laufzeit unter den Messbedingungen der Tabelle
 oben: bis 12 Aufträge 10 von 10 bewiesen (Ø 0,02–0,04 s, max. 0,12 s), 22 Aufträge 5 von 8 bewiesen
 (Ø 4,9 s), 30 Aufträge nur 2 von 6 innerhalb 10 s – dann als "Zeitlimit erreicht" gekennzeichnet.

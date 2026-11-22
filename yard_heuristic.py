@@ -27,7 +27,7 @@ Avisierung/Tor-Slots) und darf deshalb Fahrzeuge vorpositionieren: es startet be
 Reihenfolgen der Online-Regeln, wertet sie aber mit den frühestmöglichen Zeiten aus und
 verbessert per Umhängen (Auftrag in andere Position/anderes Fahrzeug) und Tauschen. Die lokale
 Suche akzeptiert nur echte Verbesserungen, kann ihr Startergebnis also nie verschlechtern; danach
-schärft Iterated Local Search (zufälliges Umhängen von drei Aufträgen + erneutes Polieren, nur
+schärft Iterated Local Search (zufälliges Umhängen von drei Aufträgen + erneute lokale Suche, nur
 nicht-schlechtere Ergebnisse werden übernommen) die beste Lösung nach. Im Gegensatz zu manchen
 anderen Demos dieses Portfolios (dock-demo: ILS/Tabu/3-opt verworfen) zahlt sich das hier messbar
 aus: gegen den exakten Löser bei 16 Aufträgen 1/10 -> 9/10 Optimum-Treffer, bei 30 Aufträgen im
@@ -196,8 +196,8 @@ def local_search(instance, sequences, max_passes=30):
 
 
 def iterated_local_search(instance, sequences, iterations=C.ILS_ITERATIONS, seed=0):
-    """Iterated Local Search: verschiebt zufällig 3 Aufträge (Störung), poliert per lokaler Suche
-    nach und übernimmt das Ergebnis, wenn es nicht schlechter ist. Zufall ist über `seed`
+    """Iterated Local Search: verschiebt zufällig 3 Aufträge (Störung), wendet erneut die lokale
+    Suche an und übernimmt das Ergebnis, wenn es nicht schlechter ist. Zufall ist über `seed`
     festgelegt - dieselbe Instanz liefert immer denselben Plan."""
     rng = random.Random(seed)
     current = [list(s) for s in sequences]

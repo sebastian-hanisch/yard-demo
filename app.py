@@ -434,7 +434,7 @@ with st.expander("📐 Mathematische Formulierung"):
 | $S_j$, $T_j$ | Startzeit und Verspätung des Auftrags $j$ |
 | $W$ | so große Zahl, dass Leerfahrt nie eine Verspätung aufwiegt |
 | $I_j$ | ATC-Index des Auftrags $j$ |
-| $K$, $\bar p$ | Vorblick-Parameter und mittlere Servicezeit |
+| $K$, $\bar p$ | Look-ahead-Parameter und mittlere Servicezeit |
 
 [Schritt für Schritt erklärt, mit Herleitung und Literatur](https://sebastianhanisch.net/hof-disposition-erklaert.html#fachleute)
         """
